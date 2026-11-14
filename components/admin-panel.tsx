@@ -404,7 +404,7 @@ export function AdminPanel() {
   const [showPassword, setShowPassword] = useState(false);
   const [checking, setChecking] = useState(false);
   const [loginEmail, setLoginEmail] = useState("");
-  const loginForm = useRef<HTMLFormElement>(null);
+  const [loginPassword, setLoginPassword] = useState("");
   const [staffScope, setStaffScope] = useState<{ role: string; staffType: string | null } | null>(null);
 
   const visibleNav = useMemo(() => {
@@ -497,9 +497,9 @@ export function AdminPanel() {
             </p>
           </div>
 
-          <form ref={loginForm} onSubmit={login} className="flex flex-col gap-4">
+          <form onSubmit={login} className="flex flex-col gap-4">
             <Input isRequired name="email" type="email" label="Email" placeholder="admin@store.com" value={loginEmail} onValueChange={setLoginEmail} />
-            <Input isRequired name="password" type={showPassword ? "text" : "password"} label="Password" placeholder="••••••••"
+            <Input isRequired name="password" type={showPassword ? "text" : "password"} label="Password" placeholder="••••••••" value={loginPassword} onValueChange={setLoginPassword}
               endContent={
                 <button type="button" aria-label="Toggle password visibility" onClick={() => setShowPassword((v) => !v)} className="cursor-pointer text-gray-400 hover:text-primary transition-colors">
                   {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
@@ -520,7 +520,7 @@ export function AdminPanel() {
             <p className="mt-2 break-all text-xs text-gray-600 dark:text-slate-300">Email: {taskDemoAdmin.email}</p>
             <p className="mt-1 text-xs text-gray-600 dark:text-slate-300">Password: {taskDemoAdmin.password}</p>
             <p className="mt-2 text-[11px] leading-5 text-gray-500 dark:text-slate-400">Full admin access is enabled for task review.</p>
-            <button type="button" onClick={() => { setLoginEmail(taskDemoAdmin.email); const input = loginForm.current?.querySelector<HTMLInputElement>('input[name="password"]'); if (input) input.value = taskDemoAdmin.password; }} className="mt-3 text-xs font-bold text-primary hover:underline">
+            <button type="button" onClick={() => { setLoginEmail(taskDemoAdmin.email); setLoginPassword(taskDemoAdmin.password); }} className="mt-3 text-xs font-bold text-primary hover:underline">
               Fill demo sign-in
             </button>
           </aside>

@@ -130,7 +130,7 @@ On Hostinger, configure the environment variables in the Node.js application set
 
 ## Authentication Setup
 
-Customer registration and login are available from the account interface. Passwords are hashed with bcrypt, and successful authentication uses a JWT session cookie. Set a unique `JWT_SECRET` before starting the app. For an initial admin, set `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD` in the private server environment, then run the seed; never publish admin credentials. The first-admin onboarding route is also available when no admin account exists. Admins create and update team access from **Staff Team**; staff and admin accounts use the same `/admin` sign-in. Order Manager can access orders, Product Manager can manage products and categories, Order + Product Manager can access both sets of sections, and Full Admin receives all admin permissions. Access can be changed later from the team member's row; an admin cannot change their own access.
+Customer registration and login are available from the account interface. Passwords are hashed with bcrypt, and successful authentication uses a JWT session cookie. Set a unique `JWT_SECRET` before starting the app. For a private store, set `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD` in the private server environment and run the seed. This assessment build includes the public `demo@admin.com` task-review account; do not reuse its password for a real store. The first-admin onboarding route is also available when no admin account exists. Admins create and update team access from **Staff Team**; staff and admin accounts use the same `/admin` sign-in. Order Manager can access orders, Product Manager can manage products and categories, Order + Product Manager can access both sets of sections, and Full Admin receives all admin permissions. Access can be changed later from the team member's row; an admin cannot change their own access.
 
 ## Payment Setup
 
@@ -153,6 +153,21 @@ The task demo account opens `/admin` with **Full Admin** permissions so a review
 | `demo@admin.com` | `demo1234` |
 
 Use the storefront to browse product listings and details. To test registration, cart, and checkout, create a separate customer account. The task demo admin is intended for assessment of this project. Do not store real customer information in the demo account.
+
+## Local Testing
+
+For a fresh local setup, start MySQL and make sure `DATABASE_URL` in `.env` points to that local MySQL instance (`127.0.0.1`), then install dependencies and initialize the database:
+
+```bash
+npm install
+npx prisma generate
+npx prisma migrate deploy
+npm run seed
+```
+
+Start the app in a terminal with `npm run dev` and open <http://localhost:3000>. Check the storefront, product details, account registration/login, cart and COD checkout. Open <http://localhost:3000/admin> and use **Fill demo sign-in** once to populate both fields, then sign in to review the admin pages. The demo account is installed by the committed migrations. The seed is safe to run repeatedly and keeps the sample catalog at 6 categories and 30 products.
+
+In a second terminal, run `npm run typecheck` for TypeScript checks. `npm run smoke:checkout` exercises auth and checkout logic and requires the configured disposable local MySQL database; do not point it at production data. To test Stripe webhooks locally, configure Stripe test keys in `.env`, start `stripe listen --forward-to localhost:3000/api/webhooks/stripe`, copy its `whsec_...` value into `.env`, restart the app, and use Stripe's test card flow. COD remains available without Stripe configuration.
 
 ## Project Map
 
