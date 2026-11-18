@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import { Toaster } from "react-hot-toast";
 import { MarketingScripts, type MarketingPixels } from "../components/marketing-scripts";
 import { StoreBottomNav } from "../components/store-bottom-nav";
+import { SiteHeader } from "../components/site-header";
 import { StoreTheme } from "../components/store-theme";
 import { internalApiUrl } from "../lib/internal-api";
 import "./globals.css";
@@ -70,6 +71,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <body style={style}>
         <Toaster position="top-center" toastOptions={{ duration: 3000, style: { borderRadius: '12px', background: '#0f172a', color: '#fff' } }} />
         <StoreTheme />
+        <SiteHeader />
         {children}
         <StoreBottomNav />
         <MarketingScripts pixels={pixels} />

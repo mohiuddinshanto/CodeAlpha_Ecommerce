@@ -299,7 +299,8 @@ export function ProductView({ slug, initialProduct, contactOptions }: { slug: st
     if (redirect) {
       window.location.href = "/checkout";
     } else {
-      window.location.href = "/";
+      window.dispatchEvent(new Event("epic-cart-updated"));
+      window.dispatchEvent(new Event("epic-cart-open"));
     }
   }
 

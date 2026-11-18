@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(node -e \"require\\('dotenv'\\).config\\(\\); const u=new URL\\(process.env.DATABASE_URL\\); console.log\\('host',u.hostname,'port',u.port,'db',u.pathname.slice\\(1\\),'user',u.username\\);\")",
+      "Bash(mysql --version)",
+      "Bash(npx prisma *)",
+      "Bash(npx tsx -e ' *)",
+      "Bash(node .tmp-count.js)",
+      "Bash(rm -f .tmp-count.js; npm run dev > /tmp/devserver.log 2>&1)",
+      "Bash(curl -s -o /dev/null http://127.0.0.1:3000/)",
+      "Bash(grep -nE \"app\\\\.\\(get|post|put|patch|delete|use\\)\\\\\\(\\\\s*[\\\\\"'\\\\`]/\" api/server.ts)",
+      "Bash(npm run *)",
+      "Bash(rm -f .claude/launch.json; rmdir .claude 2>/dev/null; echo cleaned)",
+      "Bash(node .tmp-verify.mjs)",
+      "Bash(node -e ' *)",
+      "Bash(stripe --version)",
+      "Bash(curl -s http://127.0.0.1:3000/api/products)",
+      "Bash(grep -oE '[\"$€£¥₹৳]|BDT|USD|USD')",
+      "Bash(node .tmp-check.mjs)",
+      "Bash(node .tmp-users.js)",
+      "Bash(curl -s http://127.0.0.1:3000/api/store/status)",
+      "Bash(node -e \"require\\('dotenv'\\).config\\(\\);for\\(const k of ['SEED_ADMIN_EMAIL','SEED_ADMIN_PASSWORD','SEED_DEMO_CUSTOMER_EMAIL','SEED_DEMO_CUSTOMER_PASSWORD']\\)console.log\\(k, process.env[k]?'SET':'MISSING'\\)\")",
+      "Bash(node .tmp-admin.mjs)",
+      "Bash(curl -s http://127.0.0.1:3000/api/store/checkout-options)",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\).on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);console.log\\(' methods:',j.methods.map\\(m=>m.id+':'+m.enabled\\).join\\(', '\\)\\);console.log\\(' stripeConfigured:',j.stripeConfigured\\);}\\)\")",
+      "Bash(stripe listen *)"
+    ]
+  }
+}

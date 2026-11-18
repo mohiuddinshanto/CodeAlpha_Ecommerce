@@ -246,6 +246,8 @@ export function CategoryView({ slug, initialProducts, initialCategories, initial
     const hit = old.find((i: CartItem) => i.id === key);
     const item: CartItem = { id: key, slug: p.slug, name: p.name, images: p.images, price, categoryId: p.categoryId, categoryIds: [...new Set([p.categoryId, ...(p.categoryLinks ?? []).map((link) => link.categoryId)])], qty: hit ? hit.qty + 1 : 1, variationId, sku };
     localStorage.setItem("epic-cart", JSON.stringify(hit ? old.map((i: CartItem) => i.id === key ? item : i) : [...old, item]));
+    window.dispatchEvent(new Event("epic-cart-updated"));
+    window.dispatchEvent(new Event("epic-cart-open"));
     toast.success("Added to your cart.");
   }
 

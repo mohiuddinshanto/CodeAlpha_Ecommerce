@@ -619,6 +619,8 @@ export function ShopView({ initialLayout = "classic", initialProducts, initialCa
       "epic-cart",
       JSON.stringify(hit ? old.map((i: CartItem) => (i.id === key ? item : i)) : [...old, item])
     );
+    window.dispatchEvent(new Event("epic-cart-updated"));
+    window.dispatchEvent(new Event("epic-cart-open"));
     toast.success("Added to cart.");
   }
 

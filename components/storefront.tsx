@@ -357,6 +357,7 @@ export function Storefront({
   const [cartBooted, setCartBooted] = useState(false);
   const lastCartSync = useRef("");
   const [open, setOpen] = useState(false);
+  const [cartDisplayMode, setCartDisplayMode] = useState<"popup" | "side">(initialStatus?.config?.featureFlags?.cartDisplayMode === "side" ? "side" : "popup");
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [chatConfig, setChatConfig] = useState<ChatConfig | null>(initialStatus?.config?.chatConfig ?? null);
   const [chatOpen, setChatOpen] = useState(false);
@@ -386,6 +387,12 @@ export function Storefront({
   const hasInitial = Boolean(initialProducts && initialCategories && initialStatus);
 
   useEffect(() => {
+    const openCart = () => setOpen(true);
+    window.addEventListener("epic-cart-open", openCart);
+    return () => window.removeEventListener("epic-cart-open", openCart);
+  }, []);
+
+  useEffect(() => {
     if (!hasInitial) {
       Promise.all([
         fetch(`${apiUrl}/api/products?home=1`).then((r) => r.json()),
@@ -408,6 +415,7 @@ export function Storefront({
           if (status?.config && "logoUrl" in status.config) setLogoUrl(status.config.logoUrl ?? null);
           setAllowAddToCart(status?.config?.featureFlags?.addToCart !== false);
           setBottomNav(status?.config?.featureFlags?.bottomNav !== false);
+          setCartDisplayMode(status?.config?.featureFlags?.cartDisplayMode === "side" ? "side" : "popup");
         })
         .catch(() => {})
         .finally(() => setReady(true));
@@ -1281,7 +1289,7 @@ export function Storefront({
       {open && (
         <>
           <div className="backdrop" onClick={() => setOpen(false)} />
-          <aside className="cart-panel">
+          <aside className={`cart-panel ${cartDisplayMode === "popup" ? "cart-panel-popup" : ""}`} role="dialog" aria-modal="true" aria-label="Your cart">
             <div className="cart-header">
               <h2>
                 <FiShoppingBag /> Your Bag ({totalCount})

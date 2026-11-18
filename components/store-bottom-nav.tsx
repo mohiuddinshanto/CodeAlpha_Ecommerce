@@ -78,14 +78,14 @@ export function StoreBottomNav() {
   return (
     <>
       {count > 0 && (
-        <Link
-          href="/checkout"
-          prefetch
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new Event("epic-cart-open"))}
           className="fixed bottom-[76px] right-3 z-40 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-indigo-600 px-4 py-2.5 text-xs font-bold text-white shadow-lg shadow-indigo-500/30 active:scale-[0.98] md:hidden"
         >
           <FiShoppingBag size={14} /> View bag · {money(total)}{" "}
           <FiArrowRight size={14} />
-        </Link>
+        </button>
       )}
       <nav
         className="store-bottom-nav fixed bottom-0 inset-x-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-lg px-1 pt-1.5 shadow-[0_-8px_30px_rgba(15,23,42,0.08)] md:hidden"
@@ -107,7 +107,7 @@ export function StoreBottomNav() {
           >
             <FiGrid className="text-base" /> Shop
           </Link>
-          <Link href="/checkout" prefetch className="relative flex flex-col items-center gap-0.5 rounded-xl py-1 text-[10px] font-semibold text-slate-500">
+          <button type="button" onClick={() => window.dispatchEvent(new Event("epic-cart-open"))} className="relative flex flex-col items-center gap-0.5 rounded-xl py-1 text-[10px] font-semibold text-slate-500">
             <span className="relative">
               <FiShoppingBag className="text-base" />
               {count > 0 && (
@@ -117,7 +117,7 @@ export function StoreBottomNav() {
               )}
             </span>
             Bag
-          </Link>
+          </button>
           <Link href="/account" prefetch className="flex flex-col items-center gap-0.5 rounded-xl py-1 text-[10px] font-semibold text-slate-500">
             <FiUser className="text-base" /> Account
           </Link>

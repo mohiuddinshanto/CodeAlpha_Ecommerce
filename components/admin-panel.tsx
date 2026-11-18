@@ -98,7 +98,7 @@ type Config = {
   reviewerDemo?: boolean;
   currency: string;
   themeSettings?: { primaryColor?: string; secondaryColor?: string; font?: string };
-  featureFlags: { cod: boolean; reviews: boolean; wishlist: boolean; coupons: boolean; addToCart: boolean; checkoutEmail: boolean; bottomNav: boolean; productCallButton?: boolean; productWhatsappButton?: boolean };
+  featureFlags: { cod: boolean; reviews: boolean; wishlist: boolean; coupons: boolean; addToCart: boolean; checkoutEmail: boolean; bottomNav: boolean; cartDisplayMode?: "popup" | "side"; productCallButton?: boolean; productWhatsappButton?: boolean };
   paymentConfig?: {
     bkash?: { enabled: boolean; mode?: string; callbackUrl?: string; appKey?: string; appSecret?: string; username?: string; password?: string };
     nagad?: { enabled: boolean; mode?: string; callbackUrl?: string; merchantId?: string; merchantNumber?: string; privateKey?: string };
@@ -4021,6 +4021,10 @@ function FeatureSettings({ config, save, saving }: { config: Config; save: (payl
           <ToggleRow label="Add to Cart in product lists" description="ON: lists show the Add to Cart button (current). OFF: lists show only an Order Now button that goes straight to checkout. The single product page always keeps both." selected={flags.addToCart} onChange={(addToCart) => save({ featureFlags: { ...flags, addToCart } })} />
           <ToggleRow label="Email field at checkout" description="ON: customers see a (optional) email field at checkout and receive an order confirmation email when SMTP is configured." selected={flags.checkoutEmail} onChange={(checkoutEmail) => save({ featureFlags: { ...flags, checkoutEmail } })} />
           <ToggleRow label="Bottom quick nav (mobile)" description="ON: mobile visitors see a fixed bottom bar on the home page with Home, Shop, Bag and Profile for one-tap navigation. OFF: hides it." selected={flags.bottomNav} onChange={(bottomNav) => save({ featureFlags: { ...flags, bottomNav } })} />
+          <div className="flex flex-wrap items-center justify-between gap-4 py-3 border-b border-gray-100 dark:border-white/6">
+            <div><p className="text-sm font-medium text-gray-800 dark:text-slate-200">Cart display</p><p className="text-xs text-gray-400 dark:text-slate-500">Choose what customers see when they open the cart.</p></div>
+            <select aria-label="Cart display" className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm dark:bg-slate-900" value={flags.cartDisplayMode ?? "popup"} onChange={(e) => save({ featureFlags: { ...flags, cartDisplayMode: e.target.value as "popup" | "side" } })}><option value="popup">Popup (default)</option><option value="side">Side panel</option></select>
+          </div>
           <ToggleRow label="Call button on product page" description="Show the call button using the Support Phone Number in Marketing & Chat settings." selected={Boolean(flags.productCallButton)} onChange={(productCallButton) => save({ featureFlags: { ...flags, productCallButton } })} />
           <ToggleRow label="WhatsApp order button on product page" description="Show a WhatsApp order button using the WhatsApp Number in Marketing & Chat settings." selected={Boolean(flags.productWhatsappButton)} onChange={(productWhatsappButton) => save({ featureFlags: { ...flags, productWhatsappButton } })} />
           <ToggleRow label="Order IP Rate Limit" description="Protect against repeated automated spam orders." selected={config.enableIpLimit} onChange={(enableIpLimit) => save({ enableIpLimit })} />
