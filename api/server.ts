@@ -566,6 +566,24 @@ function appBaseUrl(): string {
   return (first || "http://localhost:3000").replace(/\/+$/, "");
 }
 
+function stripeReturnOrigin(req: express.Request): string {
+  const requestOrigin = req.header("origin");
+  if (requestOrigin) {
+    try {
+      const parsed = new URL(requestOrigin);
+      const origin = parsed.origin;
+      const allowed = allowedOrigins.includes(origin) ||
+        /^https?:\/\/([a-z0-9-]+\.)?gadgetlagbe\.online$/i.test(origin) ||
+        (process.env.NODE_ENV !== "production" && /^https?:\/\/localhost(:\d+)?$/i.test(origin));
+      if (allowed) return origin;
+    } catch {
+      // Fall back to the configured storefront URL when Origin is malformed.
+    }
+  }
+  const configured = process.env.CLIENT_URL || process.env.FRONTEND_URL || process.env.APP_URL || "http://localhost:3000";
+  return configured.split(",")[0]!.trim().replace(/\/+$/, "");
+}
+
 const VERIFICATION_TTL_MS = 24 * 60 * 60 * 1000;
 const PASSWORD_RESET_TTL_MS = 60 * 60 * 1000;
 
@@ -852,7 +870,7 @@ app.post("/api/checkout/stripe", requireAuth, rejectReviewer, rateLimit({ window
   const currency = (process.env.PAYMENT_CURRENCY || "usd").toLowerCase();
   const order = await prisma.order.create({ data: { customerId: req.user!.id, ipAddress: req.ip || "127.0.0.1", paymentMethod: "STRIPE", paymentStatus: "UNPAID", status: "PENDING", couponId, discountAmount: discountCents / 100, subtotal: subtotalCents / 100, shippingCharge: shippingCents / 100, totalAmount: totalCents / 100, shippingDetails: details as Prisma.InputJsonValue, orderItems: normalized as Prisma.InputJsonValue } });
   try {
-    const origin = (process.env.CLIENT_URL || process.env.FRONTEND_URL || "http://localhost:3000").split(",")[0].replace(/\/+$/, "");
+    const origin = stripeReturnOrigin(req);
     const lineItems = normalized.map((item) => ({ quantity: item.qty, price_data: { currency, unit_amount: Math.round(item.price * 100), product_data: { name: item.name } } }));
     if (shippingCents) lineItems.push({ quantity: 1, price_data: { currency, unit_amount: shippingCents, product_data: { name: "Shipping" } } });
     const discounts = discountCents ? [{ coupon: (await stripe().coupons.create({ amount_off: discountCents, currency, duration: "once" })).id }] : undefined;
